@@ -1,0 +1,1177 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🐍🦈 蛇鯊宇宙創作中心</title>
+    <style id="baseStyles">
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        :root {
+            --primary: #00D4FF;
+            --secondary: #006BA6;
+            --danger: #c41e3a;
+            --gold: #FFD700;
+            --dark: #0f1419;
+            --darker: #1a1a2e;
+            --text-light: #e0e0e0;
+            --text-muted: #a0a0a0;
+        }
+        
+        body {
+            background: linear-gradient(135deg, var(--darker) 0%, #16213e 100%);
+            color: var(--text-light);
+            font-family: 'Microsoft YaHei', 'PingFang SC', sans-serif;
+            line-height: 1.6;
+        }
+        
+        .app-container {
+            display: flex;
+            min-height: 100vh;
+        }
+        
+        /* 側邊欄 */
+        .sidebar {
+            width: 280px;
+            background: var(--dark);
+            border-right: 3px solid var(--primary);
+            padding: 20px;
+            overflow-y: auto;
+            position: sticky;
+            top: 0;
+            max-height: 100vh;
+        }
+        
+        .logo-section {
+            margin-bottom: 30px;
+            text-align: center;
+        }
+        
+        .logo {
+            font-size: 2em;
+            font-weight: bold;
+            color: var(--gold);
+            margin-bottom: 10px;
+        }
+        
+        .mode-toggle {
+            background: var(--secondary);
+            padding: 12px;
+            border: 2px solid var(--primary);
+            border-radius: 6px;
+            cursor: pointer;
+            color: white;
+            font-weight: bold;
+            text-align: center;
+            margin-bottom: 20px;
+            transition: all 0.3s;
+        }
+        
+        .mode-toggle:hover {
+            background: var(--primary);
+            color: #000;
+        }
+        
+        .nav-section {
+            margin-bottom: 25px;
+        }
+        
+        .nav-title {
+            color: var(--gold);
+            font-size: 0.85em;
+            font-weight: bold;
+            margin-bottom: 10px;
+            opacity: 0.7;
+        }
+        
+        .nav-item {
+            padding: 12px 15px;
+            margin-bottom: 8px;
+            background: rgba(0, 212, 255, 0.1);
+            border-left: 3px solid transparent;
+            cursor: pointer;
+            border-radius: 4px;
+            transition: all 0.3s;
+        }
+        
+        .nav-item:hover,
+        .nav-item.active {
+            background: rgba(0, 212, 255, 0.2);
+            border-left-color: var(--primary);
+            color: var(--gold);
+        }
+        
+        /* 主內容 */
+        .main-content {
+            flex: 1;
+            padding: 30px;
+            overflow-y: auto;
+        }
+        
+        .page {
+            display: none;
+        }
+        
+        .page.active {
+            display: block;
+        }
+        
+        h1 {
+            color: var(--primary);
+            margin-bottom: 25px;
+            font-size: 2.2em;
+            border-bottom: 2px solid var(--secondary);
+            padding-bottom: 15px;
+        }
+        
+        h2 {
+            color: var(--gold);
+            margin-top: 20px;
+            margin-bottom: 15px;
+            font-size: 1.4em;
+        }
+        
+        /* 表單 */
+        .form-group {
+            margin-bottom: 15px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: var(--gold);
+            font-weight: bold;
+        }
+        
+        input[type="text"],
+        input[type="date"],
+        textarea,
+        select {
+            width: 100%;
+            padding: 12px;
+            background: rgba(0, 212, 255, 0.1);
+            border: 1px solid var(--secondary);
+            border-radius: 6px;
+            color: var(--text-light);
+            font-family: inherit;
+            font-size: 1em;
+        }
+        
+        input::placeholder,
+        textarea::placeholder {
+            color: var(--text-muted);
+        }
+        
+        textarea {
+            resize: vertical;
+            min-height: 120px;
+        }
+        
+        input[type="file"] {
+            padding: 8px;
+        }
+        
+        /* 按鈕 */
+        .btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: bold;
+            margin-right: 10px;
+            margin-bottom: 10px;
+            transition: all 0.3s;
+            font-size: 0.95em;
+        }
+        
+        .btn-primary {
+            background: var(--primary);
+            color: #000;
+        }
+        
+        .btn-primary:hover {
+            background: #00A8CC;
+            transform: translateY(-2px);
+        }
+        
+        .btn-secondary {
+            background: var(--secondary);
+            color: white;
+        }
+        
+        .btn-secondary:hover {
+            background: #004a80;
+        }
+        
+        .btn-danger {
+            background: var(--danger);
+            color: white;
+        }
+        
+        .btn-danger:hover {
+            background: #a01730;
+        }
+        
+        .btn-small {
+            padding: 6px 12px;
+            font-size: 0.85em;
+        }
+        
+        /* 卡片 */
+        .card {
+            background: rgba(0, 212, 255, 0.05);
+            border: 1px solid var(--secondary);
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+        
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 15px;
+        }
+        
+        .card-title {
+            color: var(--gold);
+            font-size: 1.3em;
+            font-weight: bold;
+        }
+        
+        .card-actions {
+            display: flex;
+            gap: 8px;
+        }
+        
+        .card-meta {
+            color: var(--text-muted);
+            font-size: 0.9em;
+            margin-bottom: 10px;
+        }
+        
+        /* 網格 */
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 15px;
+        }
+        
+        .grid-item {
+            background: rgba(0, 212, 255, 0.05);
+            border: 1px solid var(--secondary);
+            border-radius: 8px;
+            overflow: hidden;
+            transition: all 0.3s;
+        }
+        
+        .grid-item:hover {
+            border-color: var(--primary);
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(0, 212, 255, 0.2);
+        }
+        
+        .grid-item-image {
+            width: 100%;
+            height: 150px;
+            background: rgba(0, 0, 0, 0.3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #666;
+            font-size: 2.5em;
+        }
+        
+        .grid-item-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .grid-item-content {
+            padding: 12px;
+        }
+        
+        .grid-item-title {
+            color: var(--gold);
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+        
+        .grid-item-meta {
+            font-size: 0.85em;
+            color: var(--text-muted);
+            margin-bottom: 8px;
+        }
+        
+        .tag {
+            display: inline-block;
+            background: rgba(196, 30, 58, 0.2);
+            color: var(--gold);
+            padding: 3px 10px;
+            border-radius: 12px;
+            font-size: 0.8em;
+            margin-right: 5px;
+            margin-bottom: 5px;
+        }
+        
+        /* 搜尋欄 */
+        .search-bar {
+            width: 100%;
+            padding: 12px 15px;
+            background: rgba(0, 212, 255, 0.1);
+            border: 1px solid var(--primary);
+            border-radius: 6px;
+            color: var(--text-light);
+            margin-bottom: 20px;
+            font-size: 1em;
+        }
+        
+        /* CSS編輯區 */
+        .css-editor {
+            background: rgba(0, 0, 0, 0.3);
+            border: 2px dashed var(--primary);
+            padding: 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+        }
+        
+        .css-editor textarea {
+            font-family: 'Courier New', monospace;
+            font-size: 0.9em;
+        }
+        
+        /* 備份區 */
+        .backup-section {
+            background: rgba(0, 0, 0, 0.3);
+            padding: 20px;
+            border-radius: 8px;
+            margin: 15px 0;
+        }
+        
+        .backup-section textarea {
+            font-family: 'Courier New', monospace;
+            font-size: 0.85em;
+            height: 250px;
+        }
+        
+        /* 文章/創作列表 */
+        .article-item {
+            background: rgba(0, 212, 255, 0.05);
+            border-left: 4px solid var(--primary);
+            padding: 15px;
+            margin-bottom: 15px;
+            border-radius: 4px;
+        }
+        
+        .article-title {
+            color: var(--gold);
+            font-size: 1.2em;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+        
+        .article-date {
+            color: var(--text-muted);
+            font-size: 0.85em;
+            margin-bottom: 10px;
+        }
+        
+        .article-preview {
+            color: var(--text-light);
+            line-height: 1.6;
+            max-height: 80px;
+            overflow: hidden;
+        }
+        
+        /* 響應式 */
+        @media (max-width: 768px) {
+            .app-container {
+                flex-direction: column;
+            }
+            
+            .sidebar {
+                width: 100%;
+                max-height: 200px;
+                position: relative;
+                border-right: none;
+                border-bottom: 3px solid var(--primary);
+                overflow-x: auto;
+                display: flex;
+                gap: 15px;
+            }
+            
+            .nav-section {
+                flex-shrink: 0;
+            }
+            
+            .grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .main-content {
+                padding: 15px;
+            }
+        }
+        
+        /* 滾動條 */
+        ::-webkit-scrollbar {
+            width: 10px;
+        }
+        
+        ::-webkit-scrollbar-track {
+            background: rgba(0, 212, 255, 0.05);
+        }
+        
+        ::-webkit-scrollbar-thumb {
+            background: var(--secondary);
+            border-radius: 5px;
+        }
+        
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--primary);
+        }
+    </style>
+</head>
+<body>
+    <div class="app-container">
+        <!-- 側邊欄 -->
+        <div class="sidebar">
+            <div class="logo-section">
+                <div class="logo">🐍🦈</div>
+                <div style="color: var(--gold); font-weight: bold;">蛇鯊宇宙</div>
+                <div style="color: var(--text-muted); font-size: 0.85em;">創作中心</div>
+            </div>
+            
+            <div class="mode-toggle" onclick="toggleMode()" title="切換編輯/檢視模式">
+                <span id="modeText">✏️ 編輯模式</span>
+            </div>
+            
+            <div class="nav-section" id="viewNav">
+                <div class="nav-title">檢視</div>
+                <div class="nav-item active" onclick="switchPage('home')">🏠 首頁</div>
+                <div class="nav-item" onclick="switchPage('gallery')">🖼️ 圖片庫</div>
+                <div class="nav-item" onclick="switchPage('articles')">📖 創作</div>
+                <div class="nav-item" onclick="switchPage('characters')">👥 角色卡</div>
+                <div class="nav-item" onclick="switchPage('prompts')">✨ Prompt</div>
+            </div>
+            
+            <div class="nav-section" id="editNav" style="display:none;">
+                <div class="nav-title">後台管理</div>
+                <div class="nav-item" onclick="switchPage('gallery-edit')">📸 圖片管理</div>
+                <div class="nav-item" onclick="switchPage('articles-edit')">📝 文章管理</div>
+                <div class="nav-item" onclick="switchPage('characters-edit')">👥 角色卡編輯</div>
+                <div class="nav-item" onclick="switchPage('prompts-edit')">✨ Prompt編輯</div>
+                <div class="nav-item" onclick="switchPage('css-editor')">🎨 CSS自定義</div>
+                <div class="nav-item" onclick="switchPage('backup')">💾 備份/匯入</div>
+            </div>
+        </div>
+        
+        <!-- 主內容 -->
+        <div class="main-content">
+            
+            <!-- 首頁 -->
+            <div id="home" class="page active">
+                <h1>🐍🦈 蛇鯊宇宙創作中心</h1>
+                <p style="margin-bottom: 30px; color: var(--text-muted);">歡迎來到你的創作天地！點擊上方「編輯模式」開始管理你的內容。</p>
+                
+                <div class="grid" style="grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));">
+                    <div class="card" onclick="switchPage('gallery')" style="cursor: pointer;">
+                        <div class="card-title">🖼️ 圖片庫</div>
+                        <p style="margin: 15px 0; color: var(--text-muted);">生成的圖片、Reference sheet等</p>
+                        <span id="homeImageCount">0 張</span>
+                    </div>
+                    
+                    <div class="card" onclick="switchPage('articles')" style="cursor: pointer;">
+                        <div class="card-title">📖 創作文章</div>
+                        <p style="margin: 15px 0; color: var(--text-muted);">小說、創作筆記、故事</p>
+                        <span id="homeArticleCount">0 篇</span>
+                    </div>
+                    
+                    <div class="card" onclick="switchPage('characters')" style="cursor: pointer;">
+                        <div class="card-title">👥 角色卡</div>
+                        <p style="margin: 15px 0; color: var(--text-muted);">佘杉、尹彥於等角色設定</p>
+                        <span id="homeCharacterCount">0 個</span>
+                    </div>
+                    
+                    <div class="card" onclick="switchPage('prompts')" style="cursor: pointer;">
+                        <div class="card-title">✨ Prompt庫</div>
+                        <p style="margin: 15px 0; color: var(--text-muted);">生成提示詞、參考Prompt</p>
+                        <span id="homePromptCount">0 個</span>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 圖片庫 - 檢視 -->
+            <div id="gallery" class="page">
+                <h1>🖼️ 圖片庫</h1>
+                <input type="text" class="search-bar" placeholder="搜尋圖片名稱或標籤..." id="imageSearch" onkeyup="filterImages()">
+                
+                <div id="imageFilterTags" style="margin-bottom: 20px;"></div>
+                
+                <div class="grid" id="galleryGrid"></div>
+            </div>
+            
+            <!-- 圖片庫 - 編輯 -->
+            <div id="gallery-edit" class="page" style="display:none;">
+                <h1>📸 圖片管理</h1>
+                
+                <div class="card">
+                    <h2>上傳新圖片</h2>
+                    <div class="form-group">
+                        <label>圖片名稱</label>
+                        <input type="text" id="newImageName" placeholder="例：摩天輪前">
+                    </div>
+                    <div class="form-group">
+                        <label>圖片檔案</label>
+                        <input type="file" id="newImageFile" accept="image/*">
+                    </div>
+                    <div class="form-group">
+                        <label>分類</label>
+                        <select id="newImageCategory">
+                            <option>單人圖</option>
+                            <option>雙人圖</option>
+                            <option>Reference sheet</option>
+                            <option>其他</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>描述</label>
+                        <textarea id="newImageDesc" placeholder="圖片描述..."></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label>標籤（用逗號分隔）</label>
+                        <input type="text" id="newImageTags" placeholder="標籤1, 標籤2, 標籤3">
+                    </div>
+                    <button class="btn btn-primary" onclick="addImage()">上傳圖片</button>
+                </div>
+                
+                <h2>已有圖片</h2>
+                <div id="imageManageList"></div>
+            </div>
+            
+            <!-- 創作文章 - 檢視 -->
+            <div id="articles" class="page">
+                <h1>📖 創作文章</h1>
+                <input type="text" class="search-bar" placeholder="搜尋文章..." id="articleSearch" onkeyup="filterArticles()">
+                
+                <div id="articleList"></div>
+            </div>
+            
+            <!-- 創作文章 - 編輯 -->
+            <div id="articles-edit" class="page" style="display:none;">
+                <h1>📝 文章管理</h1>
+                
+                <div class="card">
+                    <h2>新增文章</h2>
+                    <div class="form-group">
+                        <label>標題</label>
+                        <input type="text" id="newArticleTitle" placeholder="文章標題">
+                    </div>
+                    <div class="form-group">
+                        <label>日期</label>
+                        <input type="date" id="newArticleDate">
+                    </div>
+                    <div class="form-group">
+                        <label>分類</label>
+                        <select id="newArticleCategory">
+                            <option>小說</option>
+                            <option>短篇</option>
+                            <option>創作筆記</option>
+                            <option>其他</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>內容</label>
+                        <textarea id="newArticleContent" placeholder="文章內容（支援Markdown）..."></textarea>
+                    </div>
+                    <button class="btn btn-primary" onclick="addArticle()">發佈文章</button>
+                </div>
+                
+                <h2>已有文章</h2>
+                <div id="articleManageList"></div>
+            </div>
+            
+            <!-- 角色卡 - 檢視 -->
+            <div id="characters" class="page">
+                <h1>👥 角色卡</h1>
+                <div id="characterList"></div>
+            </div>
+            
+            <!-- 角色卡 - 編輯 -->
+            <div id="characters-edit" class="page" style="display:none;">
+                <h1>👥 角色卡編輯</h1>
+                
+                <div class="card">
+                    <h2>🐍 佘杉</h2>
+                    <div class="form-group">
+                        <label>角色卡內容（支援HTML）</label>
+                        <textarea id="sheshanContent" placeholder="佘杉的角色卡內容..."></textarea>
+                    </div>
+                    <button class="btn btn-primary" onclick="saveCharacter('sheshan')">保存佘杉</button>
+                </div>
+                
+                <div class="card">
+                    <h2>🦈 尹彥於</h2>
+                    <div class="form-group">
+                        <label>角色卡內容（支援HTML）</label>
+                        <textarea id="yinyanyuContent" placeholder="尹彥於的角色卡內容..."></textarea>
+                    </div>
+                    <button class="btn btn-primary" onclick="saveCharacter('yinyanyu')">保存尹彥於</button>
+                </div>
+            </div>
+            
+            <!-- Prompt - 檢視 -->
+            <div id="prompts" class="page">
+                <h1>✨ Prompt庫</h1>
+                <input type="text" class="search-bar" placeholder="搜尋Prompt..." id="promptSearch" onkeyup="filterPrompts()">
+                
+                <div id="promptList"></div>
+            </div>
+            
+            <!-- Prompt - 編輯 -->
+            <div id="prompts-edit" class="page" style="display:none;">
+                <h1>✨ Prompt編輯</h1>
+                
+                <div class="card">
+                    <h2>新增Prompt</h2>
+                    <div class="form-group">
+                        <label>標題</label>
+                        <input type="text" id="newPromptTitle" placeholder="Prompt標題">
+                    </div>
+                    <div class="form-group">
+                        <label>分類</label>
+                        <select id="newPromptCategory">
+                            <option>通用</option>
+                            <option>佘杉專用</option>
+                            <option>尹彥於專用</option>
+                            <option>情侶</option>
+                            <option>場景</option>
+                            <option>其他</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>標籤（用逗號分隔）</label>
+                        <input type="text" id="newPromptTags" placeholder="標籤1, 標籤2">
+                    </div>
+                    <div class="form-group">
+                        <label>內容</label>
+                        <textarea id="newPromptContent" placeholder="Prompt內容..."></textarea>
+                    </div>
+                    <button class="btn btn-primary" onclick="addPrompt()">新增Prompt</button>
+                </div>
+                
+                <h2>已有Prompt</h2>
+                <div id="promptManageList"></div>
+            </div>
+            
+            <!-- CSS編輯 -->
+            <div id="css-editor" class="page" style="display:none;">
+                <h1>🎨 CSS自定義</h1>
+                <p style="color: var(--text-muted); margin-bottom: 15px;">在下方編輯CSS，自動套用到整個應用</p>
+                
+                <div class="css-editor">
+                    <textarea id="customCSS" placeholder=":root {
+  --primary: #00D4FF;
+  --secondary: #006BA6;
+  --gold: #FFD700;
+}
+
+/* 在這裡添加自定義樣式 */"></textarea>
+                    <button class="btn btn-primary" style="margin-top: 10px;" onclick="saveCSS()">套用CSS</button>
+                </div>
+            </div>
+            
+            <!-- 備份/匯入 -->
+            <div id="backup" class="page" style="display:none;">
+                <h1>💾 備份與匯入</h1>
+                
+                <div class="card">
+                    <h2>匯出備份</h2>
+                    <p style="margin-bottom: 15px; color: var(--text-muted);">複製下方JSON保存為備份</p>
+                    <div class="backup-section">
+                        <textarea id="exportData" readonly></textarea>
+                        <button class="btn btn-primary" style="margin-top: 10px;" onclick="copyExport()">複製到剪貼板</button>
+                    </div>
+                </div>
+                
+                <div class="card">
+                    <h2>匯入備份</h2>
+                    <p style="margin-bottom: 15px; color: var(--text-muted);">貼上之前備份的JSON數據</p>
+                    <div class="form-group">
+                        <textarea id="importData" placeholder="貼上JSON數據..."></textarea>
+                    </div>
+                    <button class="btn btn-secondary" onclick="importData()">匯入</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 初始化數據結構
+        const defaultData = {
+            images: [],
+            articles: [],
+            characters: {
+                sheshan: '',
+                yinyanyu: ''
+            },
+            prompts: [],
+            customCSS: ''
+        };
+        
+        let appData = { ...defaultData };
+        let isEditMode = false;
+        
+        // 設置今天的日期為預設
+        document.getElementById('newArticleDate').valueAsDate = new Date();
+        
+        // 從localStorage加載數據
+        function loadData() {
+            const saved = localStorage.getItem('shesha-creative-center');
+            if (saved) {
+                try {
+                    appData = JSON.parse(saved);
+                } catch (e) {
+                    console.log('數據加載失敗，使用預設值');
+                    appData = { ...defaultData };
+                }
+            }
+            renderAll();
+            loadCustomCSS();
+        }
+        
+        // 保存數據到localStorage
+        function saveData() {
+            localStorage.setItem('shesha-creative-center', JSON.stringify(appData));
+        }
+        
+        // 切換編輯模式
+        function toggleMode() {
+            isEditMode = !isEditMode;
+            document.getElementById('modeText').textContent = isEditMode ? '📖 檢視模式' : '✏️ 編輯模式';
+            updateUIMode();
+        }
+        
+        // 更新UI模式
+        function updateUIMode() {
+            document.getElementById('viewNav').style.display = isEditMode ? 'none' : 'block';
+            document.getElementById('editNav').style.display = isEditMode ? 'block' : 'none';
+        }
+        
+        // 頁面切換
+        function switchPage(pageId) {
+            document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+            document.getElementById(pageId).classList.add('active');
+            document.querySelectorAll('.nav-item').forEach(item => item.classList.remove('active'));
+            event.target.closest('.nav-item')?.classList.add('active');
+            
+            if (pageId === 'gallery') renderGallery();
+            if (pageId === 'gallery-edit') renderImageManage();
+            if (pageId === 'articles') renderArticles();
+            if (pageId === 'articles-edit') renderArticleManage();
+            if (pageId === 'characters') renderCharacters();
+            if (pageId === 'prompts') renderPrompts();
+            if (pageId === 'prompts-edit') renderPromptManage();
+            if (pageId === 'backup') renderBackup();
+        }
+        
+        // 圖片相關函數
+        function addImage() {
+            const name = document.getElementById('newImageName').value;
+            const file = document.getElementById('newImageFile').files[0];
+            const category = document.getElementById('newImageCategory').value;
+            const desc = document.getElementById('newImageDesc').value;
+            const tags = document.getElementById('newImageTags').value.split(',').map(t => t.trim());
+            
+            if (!name || !file) { alert('請輸入名稱並選擇圖片'); return; }
+            
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                appData.images.push({
+                    id: Date.now(),
+                    name,
+                    category,
+                    desc,
+                    tags,
+                    image: e.target.result
+                });
+                saveData();
+                clearImageForm();
+                renderImageManage();
+                alert('圖片上傳成功！');
+            };
+            reader.readAsDataURL(file);
+        }
+        
+        function clearImageForm() {
+            document.getElementById('newImageName').value = '';
+            document.getElementById('newImageFile').value = '';
+            document.getElementById('newImageDesc').value = '';
+            document.getElementById('newImageTags').value = '';
+        }
+        
+        function deleteImage(id) {
+            if (confirm('確定刪除這張圖片？')) {
+                appData.images = appData.images.filter(img => img.id !== id);
+                saveData();
+                renderImageManage();
+                renderGallery();
+            }
+        }
+        
+        function updateImage(id) {
+            const image = appData.images.find(img => img.id === id);
+            if (image) {
+                image.name = prompt('新名稱：', image.name) || image.name;
+                image.desc = prompt('新描述：', image.desc) || image.desc;
+                image.tags = prompt('新標籤（逗號分隔）：', image.tags.join(', ')).split(',').map(t => t.trim());
+                saveData();
+                renderImageManage();
+                renderGallery();
+            }
+        }
+        
+        function renderGallery() {
+            const grid = document.getElementById('galleryGrid');
+            const html = appData.images.map(img => `
+                <div class="grid-item">
+                    <div class="grid-item-image">
+                        <img src="${img.image}" alt="${img.name}">
+                    </div>
+                    <div class="grid-item-content">
+                        <div class="grid-item-title">${img.name}</div>
+                        <div class="grid-item-meta">${img.category}</div>
+                        <p style="font-size: 0.85em; color: var(--text-muted); margin-bottom: 8px;">${img.desc}</p>
+                        <div>
+                            ${img.tags.map(tag => `<span class="tag">${tag}</span>`).join('')}
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+            grid.innerHTML = html || '<p>還沒有圖片，切換到編輯模式上傳吧！</p>';
+            updateCounts();
+        }
+        
+        function renderImageManage() {
+            const list = document.getElementById('imageManageList');
+            const html = appData.images.map(img => `
+                <div class="card">
+                    <div class="card-header">
+                        <div>
+                            <div class="card-title">${img.name}</div>
+                            <div class="card-meta">${img.category} | ${img.tags.join(', ')}</div>
+                        </div>
+                        <div class="card-actions">
+                            <button class="btn btn-secondary btn-small" onclick="updateImage(${img.id})">編輯</button>
+                            <button class="btn btn-danger btn-small" onclick="deleteImage(${img.id})">刪除</button>
+                        </div>
+                    </div>
+                    <img src="${img.image}" style="width: 100%; max-height: 200px; object-fit: cover; border-radius: 4px; margin-bottom: 10px;">
+                    <p>${img.desc}</p>
+                </div>
+            `).join('');
+            list.innerHTML = html || '<p>還沒有圖片</p>';
+        }
+        
+        function filterImages() {
+            const term = document.getElementById('imageSearch').value.toLowerCase();
+            const items = document.querySelectorAll('#galleryGrid .grid-item');
+            items.forEach(item => {
+                const text = item.textContent.toLowerCase();
+                item.style.display = text.includes(term) ? '' : 'none';
+            });
+        }
+        
+        // 文章相關函數
+        function addArticle() {
+            const title = document.getElementById('newArticleTitle').value;
+            const date = document.getElementById('newArticleDate').value;
+            const category = document.getElementById('newArticleCategory').value;
+            const content = document.getElementById('newArticleContent').value;
+            
+            if (!title || !content) { alert('請輸入標題和內容'); return; }
+            
+            appData.articles.push({
+                id: Date.now(),
+                title,
+                date,
+                category,
+                content
+            });
+            
+            saveData();
+            clearArticleForm();
+            renderArticleManage();
+            renderArticles();
+            alert('文章發佈成功！');
+        }
+        
+        function clearArticleForm() {
+            document.getElementById('newArticleTitle').value = '';
+            document.getElementById('newArticleDate').valueAsDate = new Date();
+            document.getElementById('newArticleContent').value = '';
+        }
+        
+        function deleteArticle(id) {
+            if (confirm('確定刪除這篇文章？')) {
+                appData.articles = appData.articles.filter(a => a.id !== id);
+                saveData();
+                renderArticleManage();
+                renderArticles();
+            }
+        }
+        
+        function updateArticle(id) {
+            const article = appData.articles.find(a => a.id === id);
+            if (article) {
+                document.getElementById('newArticleTitle').value = article.title;
+                document.getElementById('newArticleDate').value = article.date;
+                document.getElementById('newArticleCategory').value = article.category;
+                document.getElementById('newArticleContent').value = article.content;
+                deleteArticle(id);
+                switchPage('articles-edit');
+            }
+        }
+        
+        function renderArticles() {
+            const list = document.getElementById('articleList');
+            const sorted = [...appData.articles].sort((a, b) => new Date(b.date) - new Date(a.date));
+            const html = sorted.map(article => `
+                <div class="article-item">
+                    <div class="article-title">${article.title}</div>
+                    <div class="article-date">${article.date} | ${article.category}</div>
+                    <div class="article-preview">${article.content.substring(0, 200)}...</div>
+                </div>
+            `).join('');
+            list.innerHTML = html || '<p>還沒有文章，開始創作吧！</p>';
+            updateCounts();
+        }
+        
+        function renderArticleManage() {
+            const list = document.getElementById('articleManageList');
+            const sorted = [...appData.articles].sort((a, b) => new Date(b.date) - new Date(a.date));
+            const html = sorted.map(article => `
+                <div class="card">
+                    <div class="card-header">
+                        <div>
+                            <div class="card-title">${article.title}</div>
+                            <div class="card-meta">${article.date} | ${article.category}</div>
+                        </div>
+                        <div class="card-actions">
+                            <button class="btn btn-secondary btn-small" onclick="updateArticle(${article.id})">編輯</button>
+                            <button class="btn btn-danger btn-small" onclick="deleteArticle(${article.id})">刪除</button>
+                        </div>
+                    </div>
+                    <div style="color: var(--text-muted);">${article.content.substring(0, 300)}...</div>
+                </div>
+            `).join('');
+            list.innerHTML = html || '<p>還沒有文章</p>';
+        }
+        
+        function filterArticles() {
+            const term = document.getElementById('articleSearch').value.toLowerCase();
+            const items = document.querySelectorAll('#articleList .article-item');
+            items.forEach(item => {
+                const text = item.textContent.toLowerCase();
+                item.style.display = text.includes(term) ? '' : 'none';
+            });
+        }
+        
+        // 角色卡相關函數
+        function saveCharacter(character) {
+            const content = document.getElementById(character + 'Content').value;
+            appData.characters[character] = content;
+            saveData();
+            alert('保存成功！');
+            renderCharacters();
+        }
+        
+        function renderCharacters() {
+            const list = document.getElementById('characterList');
+            const html = `
+                <div class="card">
+                    <div class="card-title">🐍 佘杉</div>
+                    <div style="margin-top: 15px;">${appData.characters.sheshan || '<p style="color: var(--text-muted);">還沒有設定</p>'}</div>
+                </div>
+                <div class="card">
+                    <div class="card-title">🦈 尹彥於</div>
+                    <div style="margin-top: 15px;">${appData.characters.yinyanyu || '<p style="color: var(--text-muted);">還沒有設定</p>'}</div>
+                </div>
+            `;
+            list.innerHTML = html;
+            
+            // 同時更新編輯區
+            document.getElementById('sheshanContent').value = appData.characters.sheshan;
+            document.getElementById('yinyanyuContent').value = appData.characters.yinyanyu;
+            
+            updateCounts();
+        }
+        
+        // Prompt相關函數
+        function addPrompt() {
+            const title = document.getElementById('newPromptTitle').value;
+            const category = document.getElementById('newPromptCategory').value;
+            const tags = document.getElementById('newPromptTags').value.split(',').map(t => t.trim());
+            const content = document.getElementById('newPromptContent').value;
+            
+            if (!title || !content) { alert('請輸入標題和內容'); return; }
+            
+            appData.prompts.push({
+                id: Date.now(),
+                title,
+                category,
+                tags,
+                content
+            });
+            
+            saveData();
+            clearPromptForm();
+            renderPromptManage();
+            renderPrompts();
+            alert('Prompt新增成功！');
+        }
+        
+        function clearPromptForm() {
+            document.getElementById('newPromptTitle').value = '';
+            document.getElementById('newPromptTags').value = '';
+            document.getElementById('newPromptContent').value = '';
+        }
+        
+        function deletePrompt(id) {
+            if (confirm('確定刪除這個Prompt？')) {
+                appData.prompts = appData.prompts.filter(p => p.id !== id);
+                saveData();
+                renderPromptManage();
+                renderPrompts();
+            }
+        }
+        
+        function updatePrompt(id) {
+            const prompt = appData.prompts.find(p => p.id === id);
+            if (prompt) {
+                document.getElementById('newPromptTitle').value = prompt.title;
+                document.getElementById('newPromptCategory').value = prompt.category;
+                document.getElementById('newPromptTags').value = prompt.tags.join(', ');
+                document.getElementById('newPromptContent').value = prompt.content;
+                deletePrompt(id);
+                switchPage('prompts-edit');
+            }
+        }
+        
+        function renderPrompts() {
+            const list = document.getElementById('promptList');
+            const html = appData.prompts.map(p => `
+                <div class="card">
+                    <div class="card-title">${p.title}</div>
+                    <div class="card-meta">${p.category} | ${p.tags.join(', ')}</div>
+                    <pre style="background: rgba(0,0,0,0.3); padding: 10px; border-radius: 4px; font-size: 0.85em; color: #a0e7e5; overflow-x: auto; margin-top: 10px;">${p.content}</pre>
+                </div>
+            `).join('');
+            list.innerHTML = html || '<p>還沒有Prompt，開始新增吧！</p>';
+            updateCounts();
+        }
+        
+        function renderPromptManage() {
+            const list = document.getElementById('promptManageList');
+            const html = appData.prompts.map(p => `
+                <div class="card">
+                    <div class="card-header">
+                        <div>
+                            <div class="card-title">${p.title}</div>
+                            <div class="card-meta">${p.category}</div>
+                        </div>
+                        <div class="card-actions">
+                            <button class="btn btn-secondary btn-small" onclick="updatePrompt(${p.id})">編輯</button>
+                            <button class="btn btn-danger btn-small" onclick="deletePrompt(${p.id})">刪除</button>
+                        </div>
+                    </div>
+                    <pre style="background: rgba(0,0,0,0.3); padding: 10px; border-radius: 4px; font-size: 0.85em; color: #a0e7e5; overflow-x: auto;">${p.content}</pre>
+                </div>
+            `).join('');
+            list.innerHTML = html || '<p>還沒有Prompt</p>';
+        }
+        
+        function filterPrompts() {
+            const term = document.getElementById('promptSearch').value.toLowerCase();
+            const items = document.querySelectorAll('#promptList .card');
+            items.forEach(item => {
+                const text = item.textContent.toLowerCase();
+                item.style.display = text.includes(term) ? '' : 'none';
+            });
+        }
+        
+        // CSS & 備份相關函數
+        function saveCSS() {
+            const css = document.getElementById('customCSS').value;
+            appData.customCSS = css;
+            saveData();
+            loadCustomCSS();
+            alert('CSS已套用！');
+        }
+        
+        function loadCustomCSS() {
+            const styleTag = document.getElementById('customStyles');
+            if (styleTag) styleTag.remove();
+            
+            if (appData.customCSS) {
+                const style = document.createElement('style');
+                style.id = 'customStyles';
+                style.innerHTML = appData.customCSS;
+                document.head.appendChild(style);
+            }
+            
+            document.getElementById('customCSS').value = appData.customCSS;
+        }
+        
+        function renderBackup() {
+            document.getElementById('exportData').value = JSON.stringify(appData, null, 2);
+        }
+        
+        function copyExport() {
+            document.getElementById('exportData').select();
+            document.execCommand('copy');
+            alert('已複製到剪貼板！');
+        }
+        
+        function importData() {
+            try {
+                const json = document.getElementById('importData').value;
+                const imported = JSON.parse(json);
+                appData = { ...defaultData, ...imported };
+                saveData();
+                renderAll();
+                alert('匯入成功！');
+            } catch (e) {
+                alert('JSON格式錯誤：' + e.message);
+            }
+        }
+        
+        // 更新計數
+        function updateCounts() {
+            document.getElementById('homeImageCount').textContent = appData.images.length + ' 張';
+            document.getElementById('homeArticleCount').textContent = appData.articles.length + ' 篇';
+            document.getElementById('homeCharacterCount').textContent = '2 個';
+            document.getElementById('homePromptCount').textContent = appData.prompts.length + ' 個';
+        }
+        
+        // 全部渲染
+        function renderAll() {
+            renderGallery();
+            renderArticles();
+            renderCharacters();
+            renderPrompts();
+            updateCounts();
+        }
+        
+        // 初始化
+        window.addEventListener('load', () => {
+            loadData();
+        });
+    </script>
+</body>
+</html>
