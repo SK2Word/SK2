@@ -933,7 +933,7 @@
                 document.getElementById('newArticleDate').value = article.date;
                 document.getElementById('newArticleCategory').value = article.category;
                 document.getElementById('newArticleContent').value = article.content;
-                deleteArticle(id);
+               
                 switchPage('articles-edit');
             }
         }
@@ -1058,7 +1058,6 @@
                 document.getElementById('newPromptCategory').value = prompt.category;
                 document.getElementById('newPromptTags').value = prompt.tags.join(', ');
                 document.getElementById('newPromptContent').value = prompt.content;
-                deletePrompt(id);
                 switchPage('prompts-edit');
             }
         }
