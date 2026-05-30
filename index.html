@@ -12,18 +12,18 @@
         }
         
         :root {
-            --primary: #00D4FF;
-            --secondary: #006BA6;
-            --danger: #c41e3a;
-            --gold: #FFD700;
-            --dark: #0f1419;
-            --darker: #1a1a2e;
-            --text-light: #e0e0e0;
-            --text-muted: #a0a0a0;
+            --primary: #C084FC;
+            --secondary: #7C3AED;
+            --danger: #E11D48;
+            --gold: #F9C74F;
+            --dark: #17111F;
+            --darker: #24142E;
+            --text-light: #F3EAFB;
+            --text-muted: #B8A8C9;
         }
         
         body {
-            background: linear-gradient(135deg, var(--darker) 0%, #16213e 100%);
+            background: radial-gradient(circle at top left, #3B1E4D 0%, var(--darker) 42%, #120D18 100%);
             color: var(--text-light);
             font-family: 'Microsoft YaHei', 'PingFang SC', sans-serif;
             line-height: 1.6;
@@ -73,7 +73,7 @@
         
         .mode-toggle:hover {
             background: var(--primary);
-            color: #000;
+            color: #160B22;
         }
         
         .nav-section {
@@ -91,7 +91,7 @@
         .nav-item {
             padding: 12px 15px;
             margin-bottom: 8px;
-            background: rgba(0, 212, 255, 0.1);
+            background: rgba(192, 132, 252, 0.1);
             border-left: 3px solid transparent;
             cursor: pointer;
             border-radius: 4px;
@@ -100,7 +100,7 @@
         
         .nav-item:hover,
         .nav-item.active {
-            background: rgba(0, 212, 255, 0.2);
+            background: rgba(192, 132, 252, 0.2);
             border-left-color: var(--primary);
             color: var(--gold);
         }
@@ -153,7 +153,7 @@
         select {
             width: 100%;
             padding: 12px;
-            background: rgba(0, 212, 255, 0.1);
+            background: rgba(192, 132, 252, 0.1);
             border: 1px solid var(--secondary);
             border-radius: 6px;
             color: var(--text-light);
@@ -190,11 +190,11 @@
         
         .btn-primary {
             background: var(--primary);
-            color: #000;
+            color: #160B22;
         }
         
         .btn-primary:hover {
-            background: #00A8CC;
+            background: #A855F7;
             transform: translateY(-2px);
         }
         
@@ -204,7 +204,7 @@
         }
         
         .btn-secondary:hover {
-            background: #004a80;
+            background: #5B21B6;
         }
         
         .btn-danger {
@@ -223,7 +223,7 @@
         
         /* 卡片 */
         .card {
-            background: rgba(0, 212, 255, 0.05);
+            background: rgba(192, 132, 252, 0.05);
             border: 1px solid var(--secondary);
             border-radius: 8px;
             padding: 20px;
@@ -262,7 +262,7 @@
         }
         
         .grid-item {
-            background: rgba(0, 212, 255, 0.05);
+            background: rgba(192, 132, 252, 0.05);
             border: 1px solid var(--secondary);
             border-radius: 8px;
             overflow: hidden;
@@ -272,7 +272,7 @@
         .grid-item:hover {
             border-color: var(--primary);
             transform: translateY(-5px);
-            box-shadow: 0 5px 15px rgba(0, 212, 255, 0.2);
+            box-shadow: 0 5px 15px rgba(192, 132, 252, 0.2);
         }
         
         .grid-item-image {
@@ -323,7 +323,7 @@
         .search-bar {
             width: 100%;
             padding: 12px 15px;
-            background: rgba(0, 212, 255, 0.1);
+            background: rgba(192, 132, 252, 0.1);
             border: 1px solid var(--primary);
             border-radius: 6px;
             color: var(--text-light);
@@ -361,7 +361,7 @@
         
         /* 文章/創作列表 */
         .article-item {
-            background: rgba(0, 212, 255, 0.05);
+            background: rgba(192, 132, 252, 0.05);
             border-left: 4px solid var(--primary);
             padding: 15px;
             margin-bottom: 15px;
@@ -424,7 +424,7 @@
         }
         
         ::-webkit-scrollbar-track {
-            background: rgba(0, 212, 255, 0.05);
+            background: rgba(192, 132, 252, 0.05);
         }
         
         ::-webkit-scrollbar-thumb {
@@ -460,7 +460,7 @@
                 <div class="nav-item" onclick="switchPage('prompts')">✨ Prompt</div>
             </div>
             
-            <div class="nav-section" id="editNav" >
+            <div class="nav-section" id="editNav" style="display:none;">
                 <div class="nav-title">後台管理</div>
                 <div class="nav-item" onclick="switchPage('gallery-edit')">📸 圖片管理</div>
                 <div class="nav-item" onclick="switchPage('articles-edit')">📝 文章管理</div>
@@ -589,7 +589,7 @@
                         <label>內容</label>
                         <textarea id="newArticleContent" placeholder="文章內容（支援Markdown）..."></textarea>
                     </div>
-                    <button class="btn btn-primary" onclick="addArticle()">發佈文章</button>
+                    <button id="articleSubmitBtn" class="btn btn-primary" onclick="addArticle()">發佈文章</button>
                 </div>
                 
                 <h2>已有文章</h2>
@@ -662,7 +662,7 @@
                         <label>內容</label>
                         <textarea id="newPromptContent" placeholder="Prompt內容..."></textarea>
                     </div>
-                    <button class="btn btn-primary" onclick="addPrompt()">新增Prompt</button>
+                    <button id="promptSubmitBtn" class="btn btn-primary" onclick="addPrompt()">新增Prompt</button>
                 </div>
                 
                 <h2>已有Prompt</h2>
@@ -726,6 +726,8 @@
         
         let appData = { ...defaultData };
         let isEditMode = false;
+        let editingArticleId = null;
+        let editingPromptId = null;
         
         // 設置今天的日期為預設
         document.getElementById('newArticleDate').valueAsDate = new Date();
@@ -735,7 +737,8 @@
             const saved = localStorage.getItem('shesha-creative-center');
             if (saved) {
                 try {
-                    appData = JSON.parse(saved);
+                    appData = { ...defaultData, ...JSON.parse(saved) };
+                    appData.characters = { ...defaultData.characters, ...(appData.characters || {}) };
                 } catch (e) {
                     console.log('數據加載失敗，使用預設值');
                     appData = { ...defaultData };
@@ -755,31 +758,39 @@
             isEditMode = !isEditMode;
             document.getElementById('modeText').textContent = isEditMode ? '📖 檢視模式' : '✏️ 編輯模式';
             updateUIMode();
+            switchPage(isEditMode ? 'gallery-edit' : 'home');
         }
-        
+
         // 更新UI模式
         function updateUIMode() {
             document.getElementById('viewNav').style.display = isEditMode ? 'none' : 'block';
             document.getElementById('editNav').style.display = isEditMode ? 'block' : 'none';
         }
-        
-        // 頁面切換
-        function switchPage(pageId) {
+
+        // 頁面切換：不依賴全域 event，避免手機瀏覽器偶發失靈
+        function switchPage(pageId, clickedEl = null) {
+            const targetPage = document.getElementById(pageId);
+            if (!targetPage) return;
+
             document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-            document.getElementById(pageId).classList.add('active');
+            targetPage.classList.add('active');
+
             document.querySelectorAll('.nav-item').forEach(item => item.classList.remove('active'));
-            event.target.closest('.nav-item')?.classList.add('active');
-            
+            const target = clickedEl || (window.event && window.event.target);
+            const navItem = target && target.closest ? target.closest('.nav-item') : null;
+            if (navItem) navItem.classList.add('active');
+
             if (pageId === 'gallery') renderGallery();
             if (pageId === 'gallery-edit') renderImageManage();
             if (pageId === 'articles') renderArticles();
             if (pageId === 'articles-edit') renderArticleManage();
             if (pageId === 'characters') renderCharacters();
+            if (pageId === 'characters-edit') renderCharacters();
             if (pageId === 'prompts') renderPrompts();
             if (pageId === 'prompts-edit') renderPromptManage();
             if (pageId === 'backup') renderBackup();
         }
-        
+
         // 圖片相關函數
         function addImage() {
             const name = document.getElementById('newImageName').value;
@@ -893,28 +904,44 @@
             const date = document.getElementById('newArticleDate').value;
             const category = document.getElementById('newArticleCategory').value;
             const content = document.getElementById('newArticleContent').value;
-            
+
             if (!title || !content) { alert('請輸入標題和內容'); return; }
-            
-            appData.articles.push({
-                id: Date.now(),
-                title,
-                date,
-                category,
-                content
-            });
-            
+
+            if (editingArticleId) {
+                const article = appData.articles.find(a => a.id === editingArticleId);
+                if (article) {
+                    article.title = title;
+                    article.date = date;
+                    article.category = category;
+                    article.content = content;
+                }
+                editingArticleId = null;
+                document.getElementById('articleSubmitBtn').textContent = '發佈文章';
+                alert('文章更新成功！');
+            } else {
+                appData.articles.push({
+                    id: Date.now(),
+                    title,
+                    date,
+                    category,
+                    content
+                });
+                alert('文章發佈成功！');
+            }
+
             saveData();
             clearArticleForm();
             renderArticleManage();
             renderArticles();
-            alert('文章發佈成功！');
         }
         
         function clearArticleForm() {
             document.getElementById('newArticleTitle').value = '';
             document.getElementById('newArticleDate').valueAsDate = new Date();
             document.getElementById('newArticleContent').value = '';
+            editingArticleId = null;
+            const btn = document.getElementById('articleSubmitBtn');
+            if (btn) btn.textContent = '發佈文章';
         }
         
         function deleteArticle(id) {
@@ -928,14 +955,17 @@
         
         function updateArticle(id) {
             const article = appData.articles.find(a => a.id === id);
-            if (article) {
-                document.getElementById('newArticleTitle').value = article.title;
-                document.getElementById('newArticleDate').value = article.date;
-                document.getElementById('newArticleCategory').value = article.category;
-                document.getElementById('newArticleContent').value = article.content;
-               
-                switchPage('articles-edit');
-            }
+            if (!article) return;
+
+            editingArticleId = id;
+            document.getElementById('newArticleTitle').value = article.title;
+            document.getElementById('newArticleDate').value = article.date;
+            document.getElementById('newArticleCategory').value = article.category;
+            document.getElementById('newArticleContent').value = article.content;
+            document.getElementById('articleSubmitBtn').textContent = '更新文章';
+
+            switchPage('articles-edit');
+            window.scrollTo({ top: 0, behavior: 'smooth' });
         }
         
         function renderArticles() {
@@ -1016,30 +1046,46 @@
         function addPrompt() {
             const title = document.getElementById('newPromptTitle').value;
             const category = document.getElementById('newPromptCategory').value;
-            const tags = document.getElementById('newPromptTags').value.split(',').map(t => t.trim());
+            const tags = document.getElementById('newPromptTags').value.split(',').map(t => t.trim()).filter(Boolean);
             const content = document.getElementById('newPromptContent').value;
-            
+
             if (!title || !content) { alert('請輸入標題和內容'); return; }
-            
-            appData.prompts.push({
-                id: Date.now(),
-                title,
-                category,
-                tags,
-                content
-            });
-            
+
+            if (editingPromptId) {
+                const oldPrompt = appData.prompts.find(p => p.id === editingPromptId);
+                if (oldPrompt) {
+                    oldPrompt.title = title;
+                    oldPrompt.category = category;
+                    oldPrompt.tags = tags;
+                    oldPrompt.content = content;
+                }
+                editingPromptId = null;
+                document.getElementById('promptSubmitBtn').textContent = '新增Prompt';
+                alert('Prompt更新成功！');
+            } else {
+                appData.prompts.push({
+                    id: Date.now(),
+                    title,
+                    category,
+                    tags,
+                    content
+                });
+                alert('Prompt新增成功！');
+            }
+
             saveData();
             clearPromptForm();
             renderPromptManage();
             renderPrompts();
-            alert('Prompt新增成功！');
         }
         
         function clearPromptForm() {
             document.getElementById('newPromptTitle').value = '';
             document.getElementById('newPromptTags').value = '';
             document.getElementById('newPromptContent').value = '';
+            editingPromptId = null;
+            const btn = document.getElementById('promptSubmitBtn');
+            if (btn) btn.textContent = '新增Prompt';
         }
         
         function deletePrompt(id) {
@@ -1053,13 +1099,17 @@
         
         function updatePrompt(id) {
             const prompt = appData.prompts.find(p => p.id === id);
-            if (prompt) {
-                document.getElementById('newPromptTitle').value = prompt.title;
-                document.getElementById('newPromptCategory').value = prompt.category;
-                document.getElementById('newPromptTags').value = prompt.tags.join(', ');
-                document.getElementById('newPromptContent').value = prompt.content;
-                switchPage('prompts-edit');
-            }
+            if (!prompt) return;
+
+            editingPromptId = id;
+            document.getElementById('newPromptTitle').value = prompt.title;
+            document.getElementById('newPromptCategory').value = prompt.category;
+            document.getElementById('newPromptTags').value = prompt.tags.join(', ');
+            document.getElementById('newPromptContent').value = prompt.content;
+            document.getElementById('promptSubmitBtn').textContent = '更新Prompt';
+
+            switchPage('prompts-edit');
+            window.scrollTo({ top: 0, behavior: 'smooth' });
         }
         
         function renderPrompts() {
@@ -1068,7 +1118,7 @@
                 <div class="card">
                     <div class="card-title">${p.title}</div>
                     <div class="card-meta">${p.category} | ${p.tags.join(', ')}</div>
-                    <pre style="background: rgba(0,0,0,0.3); padding: 10px; border-radius: 4px; font-size: 0.85em; color: #a0e7e5; overflow-x: auto; margin-top: 10px;">${p.content}</pre>
+                    <pre style="background: rgba(0,0,0,0.3); padding: 10px; border-radius: 4px; font-size: 0.85em; color: #E9D5FF; overflow-x: auto; margin-top: 10px;">${p.content}</pre>
                 </div>
             `).join('');
             list.innerHTML = html || '<p>還沒有Prompt，開始新增吧！</p>';
@@ -1089,7 +1139,7 @@
                             <button class="btn btn-danger btn-small" onclick="deletePrompt(${p.id})">刪除</button>
                         </div>
                     </div>
-                    <pre style="background: rgba(0,0,0,0.3); padding: 10px; border-radius: 4px; font-size: 0.85em; color: #a0e7e5; overflow-x: auto;">${p.content}</pre>
+                    <pre style="background: rgba(0,0,0,0.3); padding: 10px; border-radius: 4px; font-size: 0.85em; color: #E9D5FF; overflow-x: auto;">${p.content}</pre>
                 </div>
             `).join('');
             list.innerHTML = html || '<p>還沒有Prompt</p>';
@@ -1169,6 +1219,7 @@
         
         // 初始化
         window.addEventListener('load', () => {
+            updateUIMode();
             loadData();
         });
     </script>
